@@ -2,7 +2,8 @@
   "entrypoint": "index.html",
   "shell": "src/pages/home-app.html",
   "fragments": [
-    "src/pages/home-discover.html"
+    "src/pages/home-discover.html",
+    "src/pages/home-devices.html"
   ],
   "sources": [
     "src/**/*",
