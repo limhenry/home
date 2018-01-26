@@ -20,9 +20,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../components/home-icons.html">
 
 <link rel="lazy-import" href="home-discover.html">
+<link rel="lazy-import" href="home-devices.html">
 
 <dom-module id="home-app">
   <template>
@@ -57,58 +59,192 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .drawer-list a {
-        display: block;
+        display: flex;
+        align-items: center;
         padding: 0 16px;
         text-decoration: none;
-        color: var(--app-secondary-color);
-        line-height: 40px;
+        color: rgba(0,0,0,0.87);
+        height: 52px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .drawer-list a:focus {
+        outline: none;
       }
 
       .drawer-list a.iron-selected {
-        color: black;
-        font-weight: bold;
+        color: #1976D2;
+        background-color: #f5f5f5;
+      }
+
+      .drawer-list a.iron-selected iron-icon {
+        color: #1976D2;
+      }
+
+      .drawer-list a iron-icon {
+        color: #757575;
+        margin: 0 24px 0 4px;
+      }
+
+      paper-tabs {
+        display: none;
+      }
+
+      .nav {
+        position: fixed;
+        top: 65px;
+        left: 2px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-top: 16px;
+      }
+
+      .nav a {
+        text-decoration: none;
+      }
+
+      .nav paper-button {
+        color: #757575;
+        text-transform: none;
+        font-size: 12px;
+        border-radius: 50%;
+        width: 75px;
+        height: 75px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 4px;
+      }
+
+      .nav paper-button:focus {
+        font-weight: 400;
+      }
+
+      .nav paper-button iron-icon {
+        margin-bottom: 4px;
+      }
+
+      .nav a.iron-selected paper-button {
+        color: #1976D2;
+      }
+
+      @media screen and (max-width: 640px) {
+        .nav {
+          display: none;
+        }
+
+        app-header {
+          border-bottom: none;
+        }
+        app-header [main-title] {
+          display: none;
+        }
+
+        paper-tabs {
+          border-top: 1px solid #e0e0e0;
+          display: flex;
+          background: white;
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          height: 64px;
+          --paper-tab-ink: #757575;
+          --paper-tabs-selection-bar-color: #1976D2;
+          color: #757575;
+          font-weight: 400;
+          font-size: 12px;
+        }
+
+        paper-tab .link {
+          @apply --layout-horizontal;
+          @apply --layout-center-center;
+          flex-direction: column;
+          text-decoration: none;
+          color: #757575;
+        }
+
+        paper-tab .link:focus {
+          outline: none;
+        }
+
+        paper-tab iron-icon {
+          margin-bottom: 2px;
+        }
+
+        paper-tab.iron-selected .link{
+          color: #1976D2;
+          font-weight: 400;
+        }
       }
     </style>
 
-    <app-location
-        route="{{route}}"
-        url-space-regex="^[[rootPath]]">
+    <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
     </app-location>
 
-    <app-route
-        route="{{route}}"
-        pattern="[[rootPath]]:page"
-        data="{{routeData}}"
-        tail="{{subroute}}">
+    <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}">
     </app-route>
 
     <app-drawer-layout fullbleed force-narrow>
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-        <app-toolbar>Menu</app-toolbar>
+        <app-toolbar>Home</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="[[rootPath]]view1">View One</a>
-          <a name="view2" href="[[rootPath]]view2">View Two</a>
-          <a name="view3" href="[[rootPath]]view3">View Three</a>
+          <a href="[[rootPath]]discover" name="discover">
+            <iron-icon icon="home-icons:discover"></iron-icon>
+            <span>Discover</span>
+          </a>
+          <a href="[[rootPath]]devices" name="devices">
+            <iron-icon icon="home-icons:devices"></iron-icon>
+            <span>Devices</span>
+          </a>
         </iron-selector>
       </app-drawer>
 
       <!-- Main content -->
-      <app-header-layout has-scrolling-region>
-
-        <app-header slot="header" condenses reveals effects="waterfall">
+      <app-header-layout>
+        <app-header slot="header" condenses reveals fixed effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="home-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Home</div>
           </app-toolbar>
         </app-header>
 
-        <iron-pages
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="view404"
-            role="main">
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="nav">
+          <a href="[[rootPath]]discover" name="discover">
+            <paper-button>
+              <iron-icon icon="home-icons:discover"></iron-icon>
+              Discover
+            </paper-button>
+          </a>
+          <a href="[[rootPath]]devices" name="devices">
+            <paper-button>
+              <iron-icon icon="home-icons:devices"></iron-icon>
+              Devices
+            </paper-button>
+          </a>
+        </iron-selector>
+
+        <paper-tabs selected="[[page]]" attr-for-selected="name">
+          <paper-tab link name="discover">
+            <a href="[[rootPath]]discover" class="link" tabindex="-1">
+              <iron-icon icon="home-icons:discover"></iron-icon>
+              <span>Discover</span>
+            </a>
+          </paper-tab>
+          <paper-tab link name="devices">
+            <a href="[[rootPath]]devices" class="link" tabindex="-1">
+              <iron-icon icon="home-icons:devices"></iron-icon>
+              <span>Devices</span>
+            </a>
+          </paper-tab>
+        </paper-tabs>
+
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
           <home-discover name="discover"></home-discover>
+          <home-devices name="devices"></home-devices>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -156,10 +292,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('home-' + page + '.html');
         Polymer.importHref(
-            resolvedPageUrl,
-            null,
-            this._showPage404.bind(this),
-            true);
+          resolvedPageUrl,
+          null,
+          this._showPage404.bind(this),
+          true);
       }
 
       _showPage404() {

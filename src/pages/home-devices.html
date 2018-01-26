@@ -11,11 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<!-- <link rel="import" href="../components/cast-sender-script.html"> -->
 <link rel="import" href="../components/home-card.html">
 <link rel="import" href="../components/shared-styles.html">
 
-<dom-module id="home-discover">
+<dom-module id="home-devices">
   <template>
     <style include="shared-styles">
       :host {
@@ -38,7 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: 400;
         font-size: 28px;
         margin-bottom: 32px;
-      }
+      } 
 
       @media screen and (max-width: 640px) {
         .content {
@@ -46,22 +45,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
     </style>
-
+    
     <div class="content">
-      <h2>Welcome home</h2>
+      <h2>Devices</h2>
       <home-card></home-card>
     </div>
 
   </template>
 
   <script>
-    class HomeDiscover extends Polymer.Element {
-      static get is() { return 'home-discover'; }
+    class HomeDevices extends Polymer.Element {
+      static get is() { return 'home-devices'; }
 
       ready() {
         super.ready();
       }
     }
-    window.customElements.define(HomeDiscover.is, HomeDiscover);
+    window.customElements.define(HomeDevices.is, HomeDevices);
   </script>
 </dom-module>
