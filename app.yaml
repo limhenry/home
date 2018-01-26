@@ -1,0 +1,59 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /bower_components
+  static_dir: build/es6-unbundled/bower_components
+  secure: always
+  login: admin
+
+- url: /data
+  static_dir: build/es6-unbundled/data
+  secure: always
+  login: admin
+
+- url: /images
+  static_dir: build/es6-unbundled/images
+  secure: always
+  login: admin
+
+- url: /src
+  static_dir: build/es6-unbundled/src
+  secure: always
+  login: admin
+
+- url: /service-worker.js
+  static_files: build/es6-unbundled/service-worker.js
+  upload: build/es6-unbundled/service-worker.js
+  secure: always
+  expiration: "1s"
+  login: admin
+  http_headers:
+    Vary: Accept-Encoding
+    service-worker-allowed: /
+
+- url: /manifest.json
+  static_files: build/es6-unbundled/manifest.json
+  upload: build/es6-unbundled/manifest.json
+  secure: always
+  login: admin
+
+- url: /.*
+  static_files: build/es6-unbundled/index.html
+  upload: build/es6-unbundled/index.html
+  secure: always
+  login: admin
+
+skip_files:
+  - ^(.*/)?#.*#$
+  - ^(.*/)?.*~$
+  - ^(.*/)?.*\.py[co]$
+  - ^(.*/)?.*\.md$
+  - ^(.*/)?.*\.graffle$
+  - ^(.*/)?.*/RCS/.*$
+  - ^(.*/)?\..*$
+  - gulpfile.js
+  - test*
+  - bower_components/[^/]+/bower_components/.*$
+  - bower_components/(.+/)+(test/|demo/|README|AUTHORS|CONTRIBUTING|PATENTS|Makefile)
