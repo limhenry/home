@@ -1,0 +1,93 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+
+<dom-module id="home-device-card">
+    <template>
+        <style include="shared-styles">
+            :host {
+                margin: 6px 0 12px 0;
+                display: block;
+                box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+                border-radius: 8px;
+                max-width: 450px;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .header {
+                position: relative;
+            }
+
+            .header iron-image {
+                --iron-image-width: 100%;
+            }
+
+            .header .title {
+                position: absolute;
+                top: 0;
+                padding: 12px 16px;
+                color: white;
+                display: flex;
+            }
+
+            .header .title iron-icon {
+                margin-right: 6px;
+            }
+
+            .header .title span {
+                line-height: 24px;
+                font-weight: 400;
+            }
+
+            .content {
+                padding: 12px 16px;
+                margin-bottom: 8px;
+                font-size: 18px;
+                min-height: 40px;
+            }
+        </style>
+
+        <div class="header">
+            <iron-image src="[[rootPath]]images/assests/[[image]]"></iron-image>
+            <div class="title">
+                <iron-icon icon="home-icons:speaker"></iron-icon>
+                <span>[[heading]]</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <slot></slot>
+        </div>
+
+    </template>
+
+    <script>
+        class HomeDeviceCard extends Polymer.Element {
+            static get is() { return 'home-device-card'; }
+
+            static get properties() {
+                return {
+                    heading: {
+                        type: String,
+                        value: ''
+                    },
+                    image: {
+                        type: String,
+                        value: ''
+                    },
+                };
+            }
+        }
+        window.customElements.define(HomeDeviceCard.is, HomeDeviceCard);
+    </script>
+</dom-module>

@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../components/home-card.html">
+<link rel="import" href="../components/home-device-card.html">
 <link rel="import" href="../components/shared-styles.html">
 
 <dom-module id="home-devices">
@@ -19,7 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: flex;
-        padding: 10px;
+        padding: 16px;
       }
 
       .content {
@@ -39,16 +39,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-bottom: 32px;
       } 
 
+      .content .disconnected {
+        margin-top: 36px;
+        width: 100%;
+        border-top: 1px solid #e0e0e0;
+        padding: 16px;
+        display: flex;
+        font-size: 14px;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        font-weight: 500;
+        cursor: pointer;
+        color: #313131;
+      }
+
       @media screen and (max-width: 640px) {
         .content {
           margin-left: 0;
+          padding: 0;
+        }
+
+        .content .disconnected {
+          box-sizing: border-box;
+          margin: 12px 16px -12px 16px;
         }
       }
     </style>
     
     <div class="content">
       <h2>Devices</h2>
-      <home-card></home-card>
+      <home-device-card image="idle_google_home_mini.png" heading="Google Home Mini">
+        Start with "Hey Google"
+      </home-device-card>
+      <home-device-card image="idle_google_home.png" heading="Google Home">
+        Start with "Hey Google"
+      </home-device-card>
+
+      <div class="disconnected">
+        View Disconnected Devices
+      </div>
     </div>
 
   </template>

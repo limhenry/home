@@ -16,7 +16,8 @@
     "polymer": "Polymer/polymer#^2.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "paper-button": "PolymerElements/paper-button#^2.0.0",
-    "paper-tabs": "PolymerElements/paper-tabs#^2.0.0"
+    "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
+    "iron-image": "PolymerElements/iron-image#^2.1.2"
   },
   "resolutions": {
     "polymer": "^2.0.0"

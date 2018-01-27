@@ -1,0 +1,31 @@
+language: python
+dist: trusty
+sudo: required
+node_js: '8'
+python: 2.7
+cache:
+  directories:
+  - "$HOME/.yarn-cache"
+before_install:
+- openssl aes-256-cbc -K $encrypted_7122915e0941_key -iv $encrypted_7122915e0941_iv
+  -in credentials.tar.gz.enc -out credentials.tar.gz -d
+- nvm install 8.1.2
+- tar -xzf credentials.tar.gz
+- mkdir -p lib
+- curl -o /tmp/google-cloud-sdk-186.0.0-linux-x86_64.tar.gz https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-186.0.0-linux-x86_64.tar.gz
+- tar xzf /tmp/google-cloud-sdk-186.0.0-linux-x86_64.tar.gz -C /tmp
+- source '/tmp/google-cloud-sdk/path.bash.inc'
+- which gcloud
+- gcloud version
+- gcloud auth activate-service-account --key-file client-secret.json
+- curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+- sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
+- echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+- sudo apt-get update -qq
+- sudo apt-get install -y -qq yarn
+install:
+- yarn global add bower --ignore-engines
+- yarn global add polymer-cli --ignore-engines
+- bower install && polymer build
+script:
+- gcloud --quiet --project limhenry-home app deploy -v master
