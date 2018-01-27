@@ -143,7 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         iron-pages {
           margin-bottom: 65px;
         }
-        
+      
         .nav {
           display: none;
         }
@@ -217,12 +217,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer>
 
       <!-- Main content -->
-      <app-header-layout>
+      <app-header-layout has-scrolling-region>
         <app-header slot="header" condenses reveals fixed effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="home-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Home</div>
-            <!-- <iron-image sizing="cover" src="https://pbs.twimg.com/profile_images/923242004640800768/CSUQBN5M_bigger.jpg"></iron-image> -->
           </app-toolbar>
         </app-header>
 
@@ -241,7 +240,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </a>
         </iron-selector>
 
-        <paper-tabs selected="[[page]]" attr-for-selected="name">
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+          <home-discover name="discover"></home-discover>
+          <home-devices name="devices"></home-devices>
+        </iron-pages>
+      </app-header-layout>
+
+      <paper-tabs selected="[[page]]" attr-for-selected="name">
           <paper-tab link name="discover">
             <a href="[[rootPath]]discover" class="link" tabindex="-1">
               <iron-icon icon="home-icons:discover"></iron-icon>
@@ -255,12 +260,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </a>
           </paper-tab>
         </paper-tabs>
-
-        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-          <home-discover name="discover"></home-discover>
-          <home-devices name="devices"></home-devices>
-        </iron-pages>
-      </app-header-layout>
     </app-drawer-layout>
   </template>
 
