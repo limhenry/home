@@ -39,6 +39,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-bottom: 32px;
       } 
 
+      .content .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+        max-width: 950px;
+        grid-column-gap: 6px;
+        align-items: stretch;
+        width: 100%;
+      }
+
       .content .disconnected {
         margin-top: 36px;
         width: 100%;
@@ -64,18 +73,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           box-sizing: border-box;
           margin: 12px 16px -12px 16px;
         }
+
+        .content .container {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
     
     <div class="content">
       <h2>Devices</h2>
-      <home-device-card image="idle_google_home_mini.png" heading="Google Home Mini">
-        Start with "Hey Google"
-      </home-device-card>
-      <home-device-card image="idle_google_home.png" heading="Google Home">
-        Start with "Hey Google"
-      </home-device-card>
-
+    
+      <div class="container">
+        <home-device-card image="idle_google_home.png" heading="Google Home" type="speaker" no-content></home-device-card>
+        <home-device-card image="idle_google_home_mini.png" heading="Google Home Mini" type="speaker" no-content></home-device-card>
+        <home-device-card image="idle_digital_clock.png" heading="Android Things Digital Clock" type="developer-board" no-content></home-device-card>
+        <home-device-card image="idle_macbook.png" heading="Henry's Macbook Air" no-content type="laptop"></home-device-card>
+        <home-device-card image="idle_unknown.png" heading="ASUS Laptop" no-content type="laptop"></home-device-card>
+      </div>
+      
       <div class="disconnected">
         View Disconnected Devices
       </div>

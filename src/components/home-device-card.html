@@ -15,7 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template>
         <style include="shared-styles">
             :host {
-                margin: 6px 0 12px 0;
+                margin: 8px auto;
                 display: block;
                 box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
                 border-radius: 8px;
@@ -28,6 +28,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 position: relative;
             }
 
+            :host([no-content]) .header {
+                margin-bottom: -8px;
+            }
+
             .header iron-image {
                 --iron-image-width: 100%;
             }
@@ -38,15 +42,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 padding: 12px 16px;
                 color: white;
                 display: flex;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .header .title iron-icon {
                 margin-right: 6px;
+                min-width: 24px;
             }
 
             .header .title span {
                 line-height: 24px;
                 font-weight: 400;
+                text-overflow: ellipsis;
+                overflow: hidden; 
+                white-space: nowrap;
             }
 
             .content {
@@ -60,12 +70,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="header">
             <iron-image src="[[rootPath]]images/assests/[[image]]"></iron-image>
             <div class="title">
-                <iron-icon icon="home-icons:speaker"></iron-icon>
+                <iron-icon icon="home-icons:[[type]]"></iron-icon>
                 <span>[[heading]]</span>
             </div>
         </div>
 
-        <div class="content">
+        <div class="content" hidden$="[[noContent]]">
             <slot></slot>
         </div>
 
@@ -85,6 +95,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         type: String,
                         value: ''
                     },
+                    type: {
+                        type: String,
+                        value: 'speaker'
+                    },
+                    noContent: {
+                        type: Boolean,
+                        reflectToAttribute: true,
+                        value: false
+                    }
                 };
             }
         }
