@@ -150,6 +150,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             let connected_devices = {};
             let data = snapshot.val().devices;
             let last_update = snapshot.val().last_update;
+
             this.set('online_devices', []);
             this.set('offline_devices', []);
             for (var item in data) {
@@ -167,13 +168,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
                 devices[item] = obj;
               }
-              if (devices[item].timestamp === last_update) {
-                devices[item].online = true;
-                this.push('online_devices', devices[item]);
-              }
-              else {
+              if ((parseInt(Date.now() / 1000) - last_update) > 60) {
                 devices[item].online = false;
                 this.push('offline_devices', devices[item]);
+              }
+              else {
+                if (devices[item].timestamp === last_update) {
+                  devices[item].online = true;
+                  this.push('online_devices', devices[item]);
+                }
+                else {
+                  devices[item].online = false;
+                  this.push('offline_devices', devices[item]);
+                }
               }
             }
           });
