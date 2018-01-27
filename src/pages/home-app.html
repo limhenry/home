@@ -19,8 +19,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../components/home-icons.html">
 
 <link rel="lazy-import" href="home-discover.html">
@@ -194,6 +196,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <firebase-app
+      auth-domain="limhenry-home.firebaseapp.com"
+      database-url="https://limhenry-home.firebaseio.com/"
+      api-key="AIzaSyB26r4qb7fHuMNE6qXWozvYkuP0vbccWV0"
+      storage-bucket="limhenry-home.appspot.com"
+      messaging-sender-id="605114783048">
+    </firebase-app>
+    <firebase-auth id="auth" user="{{user}}" provider="google"></firebase-auth>
+
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
     </app-location>
 
@@ -222,6 +233,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon="home-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Home</div>
+            <iron-image sizing="cover" src$="{{user.photoURL}}"></iron-image>
           </app-toolbar>
         </app-header>
 
@@ -281,6 +293,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          user: {
+            notify: true,
+            type: Object,
+            value: null
+          }
         };
       }
 
@@ -290,10 +307,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ];
       }
 
+      ready() {
+        super.ready();
+        firebase.auth().onAuthStateChanged(user => {
+          if (!user) {
+            this.set('user', null);
+            this.$.auth.signInWithRedirect('google');
+          }
+          else {
+            this.set('user', user);
+            console.log(this.user);
+          }
+        });
+      }
+
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
-        this.page = page || 'discover';
+        this.page = page || 'devices';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -306,13 +337,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var resolvedPageUrl = this.resolveUrl('home-' + page + '.html');
         Polymer.importHref(
           resolvedPageUrl,
-          null,
+          () => {
+            this.shadowRoot.querySelector('home-' + page).loadData();
+          },
           this._showPage404.bind(this),
           true);
       }
 
       _showPage404() {
-        this.page = 'discover';
+        this.page = 'devices';
       }
     }
 

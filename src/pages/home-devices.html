@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-database-script.html">
 <link rel="import" href="../components/home-device-card.html">
 <link rel="import" href="../components/shared-styles.html">
 
@@ -37,7 +38,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: 400;
         font-size: 28px;
         margin-bottom: 32px;
-      } 
+      }
 
       .content .container {
         display: grid;
@@ -46,6 +47,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         grid-column-gap: 6px;
         align-items: stretch;
         width: 100%;
+      }
+
+      home-device-card[hidden],
+      .content .disconnected[hidden] {
+        display: none;
       }
 
       .content .disconnected {
@@ -61,6 +67,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: 500;
         cursor: pointer;
         color: #313131;
+        cursor: pointer;
       }
 
       @media screen and (max-width: 640px) {
@@ -79,31 +86,98 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
     </style>
-    
+
     <div class="content">
       <h2>Devices</h2>
-    
+
       <div class="container">
-        <home-device-card image="idle_google_home.png" heading="Google Home" type="speaker" no-content></home-device-card>
-        <home-device-card image="idle_google_home_mini.png" heading="Google Home Mini" type="speaker" no-content></home-device-card>
-        <home-device-card image="idle_digital_clock.png" heading="Android Things Digital Clock" type="developer-board" no-content></home-device-card>
-        <home-device-card image="idle_macbook.png" heading="Henry's Macbook Air" no-content type="laptop"></home-device-card>
-        <home-device-card image="idle_unknown.png" heading="ASUS Laptop" no-content type="laptop"></home-device-card>
+        <dom-repeat items="{{online_devices}}">
+          <template>
+            <home-device-card image="{{item.model_name}}.png" heading="{{item.name}}" type="{{item.type}}" no-content></home-device-card>
+          </template>
+        </dom-repeat>
+        <dom-repeat items="{{offline_devices}}">
+          <template>
+            <home-device-card hidden$="[[!showOffline]]" image="{{item.model_name}}.png" heading="{{item.name}}" type="{{item.type}}"
+              no-content offline></home-device-card>
+          </template>
+        </dom-repeat>
       </div>
-      
-      <div class="disconnected">
-        View Disconnected Devices
+
+      <div class="disconnected" on-tap="showOfflineDevices" hidden$="[[showOffline]]">
+        View Offline Devices
       </div>
     </div>
 
   </template>
 
   <script>
-    class HomeDevices extends Polymer.Element {
+    class HomeDevices extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'home-devices'; }
+
+      static get properties() {
+        return {
+          online_devices: {
+            type: Array,
+            notify: true,
+            value: []
+          },
+          offline_devices: {
+            type: Array,
+            notify: true,
+            value: []
+          },
+          showOffline: {
+            type: Boolean,
+            value: false
+          }
+        }
+      }
 
       ready() {
         super.ready();
+      }
+
+      showOfflineDevices() {
+        this.showOffline = true;
+      }
+
+      loadData() {
+        let database = firebase.database();
+        database.ref('/devices/').once('value').then(snapshot => {
+          let devices = snapshot.val();
+          database.ref('/connected/').once('value').then(snapshot => {
+            let connected_devices = {};
+            let data = snapshot.val().devices;
+            let last_update = snapshot.val().last_update;
+            this.set('online_devices', []);
+            this.set('offline_devices', []);
+            for (var item in data) {
+              if (devices[item]) {
+                devices[item].timestamp = data[item].timestamp;
+                devices[item].ip_address = data[item].ip_address;
+              }
+              else {
+                let obj = {
+                  name: 'Unknown Device - ' + item.toUpperCase(),
+                  type: 'devices_other',
+                  model_name: 'devices_other',
+                  ip_address: data[item].ip_address,
+                  timestamp: data[item].timestamp
+                }
+                devices[item] = obj;
+              }
+              if (devices[item].timestamp === last_update) {
+                devices[item].online = true;
+                this.push('online_devices', devices[item]);
+              }
+              else {
+                devices[item].online = false;
+                this.push('offline_devices', devices[item]);
+              }
+            }
+          });
+        })
       }
     }
     window.customElements.define(HomeDevices.is, HomeDevices);
