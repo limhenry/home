@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-database-script.html">
 <link rel="import" href="../components/home-device-card.html">
 <link rel="import" href="../components/shared-styles.html">
@@ -50,6 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       home-device-card[hidden],
+      paper-spinner-lite[hidden],
       .content .disconnected[hidden] {
         display: none;
       }
@@ -90,6 +92,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="content">
       <h2>Devices</h2>
 
+      <paper-spinner-lite hidden$="{{!loading}}" active="{{loading}}"></paper-spinner-lite>
+
       <div class="container">
         <dom-repeat items="{{online_devices}}">
           <template>
@@ -129,7 +133,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           showOffline: {
             type: Boolean,
-            value: false
+            value: true
+          },
+          loading: {
+            type: Boolean,
+            value: true
           }
         }
       }
@@ -171,6 +179,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               if ((parseInt(Date.now() / 1000) - last_update) > 60) {
                 devices[item].online = false;
                 this.push('offline_devices', devices[item]);
+                this.showOffline = false;
               }
               else {
                 if (devices[item].timestamp === last_update) {
@@ -180,9 +189,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 else {
                   devices[item].online = false;
                   this.push('offline_devices', devices[item]);
+                  this.showOffline = false;
                 }
               }
             }
+            this.loading = false;
           });
         })
       }

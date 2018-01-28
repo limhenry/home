@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 
-<dom-module id="home-device-card">
+<dom-module id="home-playing-card">
     <template>
         <style include="shared-styles">
             :host {
@@ -33,8 +33,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             .header iron-image {
-                --iron-image-height: 250px;
-                --iron-image-width: 100%;
+                height: 200px;
+                width: 100%;
             }
 
             .header .title {
@@ -62,31 +62,78 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             .content {
-                padding: 12px 16px;
+                padding: 6px 16px;
                 margin-bottom: 8px;
                 font-size: 18px;
                 min-height: 40px;
             }
+
+            .playing h3 {
+                margin: 0;
+                font-weight: 400;
+                font-size: 19px;
+                color: #212121;
+            }
+
+            .playing p {
+                font-size: 15px;
+                margin: 4px 0px;
+                color: #757575;
+            }
+
+            .footer {
+                margin-top: 16px;
+                font-size: 14px;
+                text-transform: uppercase;
+                font-weight: 500;
+                color: #1976D2;
+                display: flex;
+                align-items: center;
+            }
+
+            .footer iron-icon {
+                margin-left: -2px;
+                margin-right: 4px;
+                width: 22px;
+                height: 22px;
+            }
+
+            .header .bg {
+                position: absolute;
+                width: 100%;
+                top: 0;
+                opacity: 0.3;
+                background-color: black;
+                height: 200px;
+            }
         </style>
 
         <div class="header">
-            <iron-image src="[[rootPath]]images/assests/[[image]]"></iron-image>
+            <iron-image src="[[data.cover_url]]" sizing="cover"></iron-image>
+            <div class="bg"></div>
             <div class="title">
-                <iron-icon icon="home-icons:[[type]]"></iron-icon>
-                <span>[[heading]]</span>
+                <iron-icon icon="home-icons:equalizer"></iron-icon>
+                <span>Now Playing</span>
                 <iron-icon hidden$="[[!offline]]" icon="home-icons:cloud-off"></iron-icon>
             </div>
         </div>
 
-        <div class="content" hidden$="[[noContent]]">
-            <slot></slot>
+        <div class="content">
+            <div class="playing">
+                <h3>{{data.title}}</h3>
+                <p>{{data.artist}}</p>
+            </div>
+            <div class="footer">
+                <iron-icon icon="home-icons:speaker"></iron-icon>
+                <span>{{data.device_name}}</span>
+            </div>
         </div>
 
     </template>
 
     <script>
-        class HomeDeviceCard extends Polymer.Element {
-            static get is() { return 'home-device-card'; }
+        class HomePlayingCard extends Polymer.Element {
+            static get is() { return 'home-playing-card'; }
 
             static get properties() {
                 return {
@@ -114,6 +161,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 };
             }
         }
-        window.customElements.define(HomeDeviceCard.is, HomeDeviceCard);
+        window.customElements.define(HomePlayingCard.is, HomePlayingCard);
     </script>
 </dom-module>

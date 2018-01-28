@@ -9,9 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/utils/async.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../components/home-card.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../components/home-playing-card.html">
 <link rel="import" href="../components/shared-styles.html">
 
 <dom-module id="home-discover">
@@ -39,6 +41,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-bottom: 32px;
       }
 
+      .nothing[hidden],
+      paper-spinner-lite[hidden] {
+        display: none;
+      }
+
       @media screen and (max-width: 640px) {
         .content {
           margin-left: 0;
@@ -49,6 +56,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div class="content">
       <h2>Welcome home</h2>
+
+      <paper-spinner-lite hidden$="{{!loading}}" active="{{loading}}"></paper-spinner-lite>
+
+      <dom-repeat items="{{now_playing}}">
+          <template>
+            <home-playing-card data="{{item}}"></home-playing-card>
+          </template>
+      </dom-repeat>
+
+      <div class="nothing" hidden$="{{!nothingToSee}}">
+        <p>Oops. Nothing to see here.</p>
+      </div>
     </div>
 
   </template>
@@ -57,13 +76,68 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class HomeDiscover extends Polymer.Element {
       static get is() { return 'home-discover'; }
 
-      ready() {
-        super.ready();
+      static get properties() {
+        return {
+          now_playing: {
+            type: Array,
+            notify: true,
+            value: [],
+            observer: '_onNowPlayingChanged'
+          },
+          loading: {
+            type: Boolean,
+            value: true,
+            notify: true
+          },
+          nothingToSee: {
+            type: Boolean,
+            value: null,
+            notify: true
+          }
+        }
       }
 
-      loadData() {
-        console.log('load data');
+      ready() {
+        super.ready();
+
+        let database = firebase.database();
+        database.ref('/cast/').on('value', snapshot => {
+          let cast = snapshot.val();
+          database.ref('/cast_devices/').once('value').then(snapshot => {
+            let cast_devices = snapshot.val();
+            this.set('loading', false);
+            this.set('now_playing', []);
+            let playing_item = []
+            for (var item in cast) {
+              if(cast[item].isPlaying === 2 && cast[item].albumCover && cast[item].artist && cast[item].title) {
+                let mac_address = cast_devices[item].mac_address;
+                let device_name = cast_devices[item].device_name;
+                let album_cover_obj = cast[item].albumCover;
+                let album_cover = Object.keys(album_cover_obj).reduce((a, b) => album_cover_obj[a].height > album_cover_obj[b].height ? a : b);
+                cast[item].cover_url = album_cover_obj[album_cover].url;
+                cast[item].device_name = device_name;
+                cast[item].mac_address = mac_address;
+                this.push('now_playing', cast[item]);
+              }
+            }
+          })
+        })
       }
+
+      _onNowPlayingChanged(item) {
+        Polymer.Async.microTask.run(() => {
+          if (!this.loading) {
+            if (this.get('now_playing').length <= 0) {
+              this.nothingToSee = true;
+            }
+            else {
+              this.nothingToSee = false;
+            }
+          } 
+        }); 
+      }
+
+      loadData() {}
     }
     window.customElements.define(HomeDiscover.is, HomeDiscover);
   </script>
