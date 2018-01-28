@@ -33,8 +33,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             .header iron-image {
-                --iron-image-height: 250px;
-                --iron-image-width: 100%;
+                height: 250px;
+                width: 100%;
+                background-color: #939799;
             }
 
             .header .title {
@@ -70,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </style>
 
         <div class="header">
-            <iron-image src="[[rootPath]]images/assests/[[image]]"></iron-image>
+            <iron-image src="[[rootPath]]images/assests/[[image]]" sizing="contain"></iron-image>
             <div class="title">
                 <iron-icon icon="home-icons:[[type]]"></iron-icon>
                 <span>[[heading]]</span>
