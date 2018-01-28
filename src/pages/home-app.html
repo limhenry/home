@@ -21,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
@@ -28,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="lazy-import" href="home-discover.html">
 <link rel="lazy-import" href="home-devices.html">
+<link rel="lazy-import" href="home-control.html">
 
 <dom-module id="home-app">
   <template>
@@ -264,6 +266,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
           <home-discover name="discover"></home-discover>
           <home-devices name="devices"></home-devices>
+          <home-control name="control"></home-control>
         </iron-pages>
       </app-header-layout>
 
@@ -325,7 +328,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           else {
             this.set('user', user);
-            console.log(this.user);
           }
         });
       }

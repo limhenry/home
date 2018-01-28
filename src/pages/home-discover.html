@@ -109,12 +109,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.set('now_playing', []);
             let playing_item = []
             for (var item in cast) {
-              if(cast[item].isPlaying === 2 && cast[item].albumCover && cast[item].artist && cast[item].title) {
+              if(cast[item].isPlaying === 2 && cast[item].artist && cast[item].title) {
                 let mac_address = cast_devices[item].mac_address;
                 let device_name = cast_devices[item].device_name;
                 let album_cover_obj = cast[item].albumCover;
-                let album_cover = Object.keys(album_cover_obj).reduce((a, b) => album_cover_obj[a].height > album_cover_obj[b].height ? a : b);
-                cast[item].cover_url = album_cover_obj[album_cover].url;
+                if (album_cover_obj) {
+                  let album_cover = Object.keys(album_cover_obj).reduce((a, b) => album_cover_obj[a].height > album_cover_obj[b].height ? a : b);
+                  cast[item].cover_url = album_cover_obj[album_cover].url;
+                }
+                else {
+                  cast[item].cover_url = this.rootPath + "images/assests/playing.png";
+                }
                 cast[item].device_name = device_name;
                 cast[item].mac_address = mac_address;
                 this.push('now_playing', cast[item]);

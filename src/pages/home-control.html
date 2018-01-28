@@ -1,0 +1,72 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../components/shared-styles.html">
+<link rel="import" href="../components/cast-sender-script.html">
+
+<dom-module id="home-control">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: flex;
+        padding: 16px;
+      }
+
+      .content {
+        margin-left: 75px;
+        padding: 0 16px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        box-sizing: border-box;
+      }
+
+      .content h2 {
+        font-weight: 400;
+        font-size: 28px;
+        margin-bottom: 32px;
+      }
+
+      @media screen and (max-width: 640px) {
+        .content {
+          margin-left: 0;
+          padding: 0;
+        }
+      }
+    </style>
+
+    <div class="content">
+      <h2>Control</h2>
+    </div>
+
+  </template>
+
+  <script>
+    class HomeControl extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'home-control'; }
+
+      static get properties() {
+        return {}
+      }
+
+      ready() {
+        super.ready();
+      }
+
+      loadData() {
+        console.log('ok');
+      }
+    }
+    window.customElements.define(HomeControl.is, HomeControl);
+  </script>
+</dom-module>
